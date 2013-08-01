@@ -4,6 +4,15 @@ var app = require('http').createServer(handler)
   , io = require('socket.io').listen(app)
   , fs = require('fs')
 
+var words = fs.readFileSync("brit-a-z.txt", {encoding:"utf-8"})
+words = words.replace("'", "").replace("\r", "").split("\n")
+
+var games = {}
+	
+function validName(name){
+    return /\w+/.test(name)
+}
+
 app.listen(8765);
 
 function handler (req, res) {
@@ -18,6 +27,8 @@ function handler (req, res) {
     res.end(data);
   });
 }
+
+
 
 io.sockets.on('connection', function (socket) {
   socket.on('chatmessage', function (data) {
