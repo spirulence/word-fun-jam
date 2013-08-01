@@ -44,7 +44,7 @@ Game.prototype = {
             
             return true;
         }
-        return false
+        return false;
     },
     hasNick: function(nick){
         return this.nicks.indexOf(nick) != -1;
@@ -68,9 +68,7 @@ function nickAvailable(gameId, nick){
 }
     
 function handler (req, res) {
-    var parsed = url.parse(req['url'])
-    var pathSplits = parsed.path.split("/");
-    if(pathSplits.length == 3 && pathSplits[0] === "game"){
+    if(/\/game\/.*/.test(req['url'])){
         var parsed = url.parse(req['url'].slice(5));
         var splits = parsed.path.split("/");
         if(splits.length == 2){
@@ -89,7 +87,7 @@ function handler (req, res) {
             }
         }
     }else{
-        if(req['url'] === "/"){
+        if(req['url'] == "/"){
             req['url'] = "/index.html";
         }
         fs.readFile(__dirname + req['url'],
