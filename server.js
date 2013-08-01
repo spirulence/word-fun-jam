@@ -71,9 +71,9 @@ function handler (req, res) {
     if(/\/game\/.*/.test(req['url'])){
         var parsed = url.parse(req['url'].slice(5));
         var splits = parsed.path.split("/");
-        if(splits.length == 2){
-            var gameId = splits[0];
-            var nick = splits[1];
+        if(splits.length == 3){
+            var gameId = splits[1];
+            var nick = splits[2];
             if(validGameId(gameId) && nickAvailable(gameId, nick)){
                 fs.readFile(__dirname + "/game.html",
                 function (err, data) {
@@ -84,7 +84,13 @@ function handler (req, res) {
                     res.writeHead(200);
                     res.end(data);
                 });
+            }else{
+                res.writeHead(500);
+                res.end("Bad game or nick");
             }
+        }else{
+            res.writeHead(500);
+            res.end("Bad game url");
         }
     }else{
         if(req['url'] == "/"){
