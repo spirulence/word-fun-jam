@@ -66,7 +66,50 @@ function nickAvailable(gameId, nick){
         return true;
     }
 }
-    
+
+function contentType(fn) {
+
+    var a = fn.split(".");
+
+    if( a.length === 1 || ( a[0] === "" && a.length === 2 ) ) {
+        return "";
+    }
+    fn = a.pop().toLowerCase();
+
+    switch(fn)
+    {
+    case 'ico':
+      return 'image/x-icon';
+      break;
+    case 'css':
+      return 'text/css';
+      break;
+    case 'js':
+      return 'text/javascript';
+      break;
+    case 'txt':
+      return 'text/plain';
+      break;
+    case 'jpg':
+      return 'image/jpeg';
+      break;
+    case 'jpeg':
+      return 'image/jpeg';
+      break;
+    case 'png':
+      return 'image/png';
+      break;
+    case 'gif':
+      return 'image/gif';
+      break;
+    case 'svg':
+      return 'image/svg+xml';
+      break;
+    default:
+      return 'text/plain';
+    }
+}
+
 function handler (req, res) {
     if(/\/game\/.*/.test(req['url'])){
         var parsed = url.parse(req['url'].slice(5));
@@ -90,7 +133,7 @@ function handler (req, res) {
             }
         }else{
             res.writeHead(500);
-            res.end("Bad game url");
+            res.end("Bad game url");t
         }
     }else{
         if(req['url'] == "/"){
@@ -102,7 +145,8 @@ function handler (req, res) {
                 res.writeHead(500);
                 res.end("Error loading");
             }
-
+            
+            res.setHeader("Content-Type", contentType(req['url']));
             res.writeHead(200);
             res.end(data);
         });

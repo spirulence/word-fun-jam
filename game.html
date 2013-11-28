@@ -16,6 +16,9 @@
     <link href="/css/bootswatch.css" rel="stylesheet">
     <link href="/css/style.css" rel="stylesheet">
 
+    <script type="text/javascript" src="/js/angular.min.js"></script>
+    <script type="text/javascript" src="/js/game.js"></script>
+
   </head>
 
   <body class="preview" id="top" data-spy="scroll" data-target=".subnav" data-offset="80">
@@ -61,8 +64,8 @@
   </div>
 
   <div id="alerts">
-    <img id="happy" src="img/smiley.svg" />
-    <img id="sad" src="img/angry.svg" />
+    <img id="happy" src="/img/smiley.svg" />
+    <img id="sad" src="/img/angry.svg" />
   </div>
 
   <div id="self" class="player">
@@ -118,10 +121,10 @@
     <!-- Le javascript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
-    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-    <script src="/js/jquery.smooth-scroll.min.js"></script>
-    <script src="/js/bootstrap.min.js"></script>
-    <script src="/js/bootswatch.js"></script>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script type="text/javascript" src="/js/jquery.smooth-scroll.min.js"></script>
+    <script type="text/javascript" src="/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="/js/bootswatch.js"></script>
     <script type="text/javascript">
       $(document).ready(function(){
         $('#newgame').click(function(){
@@ -129,7 +132,7 @@
         });
       });
     </script>
-    <script src="/node_modules/socket.io/node_modules/socket.io-client/dist/socket.io.js"></script>
+    <script type="text/javascript" src="/node_modules/socket.io/node_modules/socket.io-client/dist/socket.io.js"></script>
     <script>
       var socket = io.connect('/');
     </script>
