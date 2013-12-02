@@ -56,10 +56,10 @@ function GameCtrl($scope, $location) {
 
     //load the new game
     socket.on('initResponse', function (nick, opponent) {
-        console.log()
         $scope.playerReady = true;
         $scope.nick = nick;
-        $scope.opponent = opponent;
+        $scope.opponent = (opponent) ? opponent : 'opponent?';
+        $scope.$apply();
     });
 
     //receive any updates before game starts

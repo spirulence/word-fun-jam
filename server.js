@@ -225,11 +225,13 @@ io.sockets.on('connection', function (socket) {
                     if(player.id!=socket.id){
                         opponent = socket.nick;
                         player.emit('opponentJoined', opponent);
+                        socket.emit('initResponse', nick, player.nick);
                         game.start();
                     }
                 });
-            } 
-            socket.emit('initResponse', nick, opponent);
+            } else {
+                socket.emit('initResponse', nick, opponent);
+            }
         }
     });
 
