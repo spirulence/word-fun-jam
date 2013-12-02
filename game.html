@@ -55,22 +55,27 @@
 
 <!-- Masthead
 ================================================== -->
+
+<h1 id="currentWord">{{currentWord}}</h1>
+<h1 class="countDown">{{countDown}}</h1>
+
 <form ng-submit="postMessage()">
                 
   <div id="opponent" class="player">
     <div class="name">{{opponent}}</div>
-    <input class="typey" type="text">{{opponentText}}</input>
+    <input class="typey" type="text" ng-model="opponentText" />
     <div class="points">{{opponentTime}}</div>ms
   </div>
 
-  <div id="alerts">
-    <img id="happy" src="/img/smiley.svg" />
-    <img id="sad" src="/img/angry.svg" />
+  <div id="alert-holder">
+    <div id="alerts"></div>
   </div>
 
   <div id="self" class="player">
     <div class="name">{{nick}}</div>
-    <input class="typey" type="text">{{myText}}</input>
+    <form ng-submit="submitWord()">
+      <input class="typey" type="text" ng-model="myText" />
+    </form>
     <div class="points">{{myTime}}</div>ms
   </div>
   <input style="display: none;" class="btn-primary" type="submit" value="play">
@@ -96,6 +101,13 @@
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
+
+<div id="test">
+  <a ng-click="yayWin()">win</a>
+  <a ng-click="booLose()">lose</a>
+  <a ng-click="ask4word()">getWord</a>
+</div>
+{{socket}}
 
 
 <!-- Footer

@@ -24,21 +24,22 @@ function Game(name){
 }
 Game.prototype = {
     name: null,
-    join: function(socket){
+    join: function(socket, gameId){
         if(this.nicks.indexOf(socket.nick) == -1 && this.nicks.length < 2){
-            this.players.forEach( function(player){
-                socket.emit('setOpponent', player.nick);
-            });
+            // this.players.forEach( function(player){
+            //     socket.emit('setOpponent', player.nick);
+            // });
             
-            socket.game = game;
+            this.name = gameId,
+            socket.game = this;
             socket.score = 0;
             this.players.push(socket);
             this.nicks.push(socket.nick);
             
             if(this.nicks.length == 2){
-                this.players.forEach( function(player){
-                    player.emit('start');
-                });
+                // this.players.forEach( function(player){
+                //     player.emit('start');
+                // });
                 this.inProgress = true;
             }
             
@@ -48,11 +49,49 @@ Game.prototype = {
     },
     hasNick: function(nick){
         return this.nicks.indexOf(nick) != -1;
+    },
+    emit: function(socket, msg, data) {
+        if(typeof data == undefined){ data = ''; }
+        this.players.forEach( function(player){
+            console.log(player.id);
+            console.log(socket.id);
+            if(socket.id!=player.id) {
+                console.log('emitting keystroke');
+                player.emit(msg, data);
+            }
+        });
+    },
+    start: function(){
+        var gameId = this.name;
+        for(var i=5; i>=0; i--) {
+            console.log('i', i);
+            function timeIt(i) {
+                setTimeout(function() { 
+                    games[gameId].players.forEach( function(player){
+                        player.emit('countDown', i);
+                    });
+                }, (5-i)*1000);
+            }
+            if(i>0){
+                timeIt(i);
+            } else {
+                //start game
+                console.log('start game');
+                games[gameId].currentWord = getRandomWord();
+                console.log(games[gameId].currentWord);
+                setTimeout(function() { 
+                    games[gameId].players.forEach( function(player){
+                        player.emit('start');
+                        player.emit('newWord', games[gameId].currentWord);
+                    });
+                }, (5-i)*1000);
+            }
+        }
     }
 }
     
-function validGameId(name){
-    return /\w+/.test(name)
+function validGameId(gameId){
+    return /\w+/.test(gameId)
 }
 
 function nickAvailable(gameId, nick){
@@ -78,6 +117,12 @@ function contentType(fn) {
 
     switch(fn)
     {
+    case 'html':
+      return 'text/html';
+      break;
+    case 'htm':
+      return 'text/html';
+      break;
     case 'ico':
       return 'image/x-icon';
       break;
@@ -153,9 +198,16 @@ function handler (req, res) {
     }
 }
 
+function getRandomWord() {
+    var data = fs.readFileSync('brit-a-z.txt', {encoding: 'UTF8'});
+    var lines = data.split('\n');
+    return lines[Math.floor(Math.random()*lines.length)];
+}
 
 io.sockets.on('connection', function (socket) {
-    socket.on('init', function (gameId, nick){
+    socket.on('init', function (data){
+        var gameId = data.gameId;
+        var nick = data.nick;
         socket.nick = nick;
         
         if(!games.hasOwnProperty(gameId)){
@@ -163,9 +215,30 @@ io.sockets.on('connection', function (socket) {
         }
         var game = games[gameId];
         
-        if (game.join(socket)){
-            socket.emit('initResponse', {});
+        if (game.join(socket, gameId)){
+            console.log(nick+' joined game '+gameId);
+            var opponent;
+            if(game.players.length==2) { 
+                console.log(game.players);
+                game.players.forEach( function(player){
+                    
+                    if(player.id!=socket.id){
+                        opponent = socket.nick;
+                        player.emit('opponentJoined', opponent);
+                        game.start();
+                    }
+                });
+            } 
+            socket.emit('initResponse', nick, opponent);
         }
     });
-    
+
+    socket.on('ask4word', function(){
+        socket.emit('wordResponse', getRandomWord());
+    });
+
+    socket.on('keyStroke', function(userText){
+        socket.game.emit(socket, 'update', userText.text);
+    });
+
 });
