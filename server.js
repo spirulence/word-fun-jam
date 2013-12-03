@@ -4,9 +4,10 @@ var app = require('http').createServer(handler)
   , io = require('socket.io').listen(app)
   , _ = require('lodash')
   , fs = require('fs')
-  , url = require('url')
+  , url = require('url');
 
-var words = fs.readFileSync("brit-a-z.txt", {encoding:"utf-8"});
+var words = fs.readFileSync("brit-a-z.txt");
+words = words.toString('utf8');
 words = words.replace("'", "").replace("\r", "").split("\n");
 
 app.listen(8765);
@@ -20,8 +21,8 @@ function getRandomInt(min, max) {
 function Game(name){
     this.name = name;
     this.inProgress = false;
-    this.players = []
-    this.nicks = []
+    this.players = [];
+    this.nicks = [];
 }
 Game.prototype = {
     name: null,
@@ -89,10 +90,10 @@ Game.prototype = {
             }
         }
     }
-}
+};
     
 function validGameId(gameId){
-    return /\w+/.test(gameId)
+    return /\w+/.test(gameId);
 }
 
 function nickAvailable(gameId, nick){
