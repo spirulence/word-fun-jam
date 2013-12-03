@@ -123,3 +123,15 @@ function GameCtrl($scope, $location) {
         $scope.$apply();
     });
 }
+
+function JoinCtrl($scope, $http) {
+
+    $http({method: 'GET', url: '/getgames'}).
+    success(function(data) {
+        console.log(data);
+        $scope.games = data;
+    }).
+    error(function(data, status, headers, config) {
+        alert('oops couldn\'t get game list');
+    });
+}

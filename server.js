@@ -2,6 +2,7 @@ var http = require("http");
 
 var app = require('http').createServer(handler)
   , io = require('socket.io').listen(app)
+  , _ = require('lodash')
   , fs = require('fs')
   , url = require('url')
 
@@ -180,9 +181,31 @@ function handler (req, res) {
             res.writeHead(500);
             res.end("Bad game url");t
         }
-    }else{
+    }else if(req['url'] == "/getgames"){
+
+        var data = [];
+        _.forEach(games, function(game){ 
+            var players=[];
+            _.forEach(game.players, function(player){
+                players.push(_.pick(player,['nick']));
+            });
+            data.push({
+                name: game.name,
+                players: players
+            });
+        });
+
+        data = JSON.stringify(data);
+        res.setHeader("Content-Type", "text/json");
+        res.writeHead(200);
+        res.end(data);
+    
+    } else { 
         if(req['url'] == "/"){
             req['url'] = "/index.html";
+        }
+        if(req['url'] == "/join"){
+            req['url'] = "/join.html";
         }
         fs.readFile(__dirname + req['url'],
         function (err, data) {
