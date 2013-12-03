@@ -180,7 +180,7 @@ function handler (req, res) {
             }
         }else{
             res.writeHead(500);
-            res.end("Bad game url");t
+            res.end("Bad game url");
         }
     }else if(req['url'] == "/getgames"){
 
@@ -209,16 +209,18 @@ function handler (req, res) {
             req['url'] = "/join.html";
         }
         fs.readFile(__dirname + req['url'],
-        function (err, data) {
-            if (err) {
-                res.writeHead(500);
-                res.end("Error loading");
-            }
-            
-            res.setHeader("Content-Type", contentType(req['url']));
-            res.writeHead(200);
-            res.end(data);
-        });
+	        function (err, data) {
+	            if (err) {
+	                res.writeHead(500);
+	                res.end("Error loading");
+	            } else {
+	            
+		            res.setHeader("Content-Type", contentType(req['url']));
+		            res.writeHead(200);
+		            res.end(data);
+		        }
+        	}
+    	);
     }
 }
 

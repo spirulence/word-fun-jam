@@ -96,12 +96,16 @@
       <th>Game ID</th>
       <th>Players</th>
       <th>Status</th>
+      <th>Score</th>
+      <th>Rounds</th>
       <th>Join</th>
   </head>
   <tr ng-repeat="game in games">
     <td>{{game.name}}</td>
     <td><span ng-repeat="player in game.players">{{player.nick}}<br /></span></td>
     <td><span ng-show="game.players.length < 2">Open</span><span ng-show="game.players.length > 1">Full</span></td>
+    <td>Score</td>
+    <td>Rounds</td>
     <td><a ng-show="game.players.length < 2" class="join" href="#">Join</a></td>
   </tr>
 </table>
@@ -132,7 +136,7 @@
 
 </div><!-- /container -->
 
-
+<h2><a class="something" href="#">something</a></h2>
 
     <!-- Le javascript
     ================================================== -->
@@ -144,7 +148,7 @@
     <script type="text/javascript">
       $(document).ready(function(){
         
-        $('#something').click(function(){
+        $('.something').click(function(){
           alert('join');
           // console.log(e);
           // e.preventDefault();
