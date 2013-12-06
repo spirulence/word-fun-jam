@@ -106,7 +106,7 @@
     <td><span ng-show="game.players.length < 2">Open</span><span ng-show="game.players.length > 1">Full</span></td>
     <td>Score</td>
     <td>Rounds</td>
-    <td><a ng-show="game.players.length < 2" class="join" href="#">Join</a></td>
+    <td><a ng-show="game.players.length < 2" ng-click="join(game)" href="#">Join</a></td>
   </tr>
 </table>
 
@@ -136,8 +136,6 @@
 
 </div><!-- /container -->
 
-<h2><a class="something" href="#">something</a></h2>
-
     <!-- Le javascript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
@@ -147,22 +145,13 @@
     <script type="text/javascript" src="/js/bootswatch.js"></script>
     <script type="text/javascript">
       $(document).ready(function(){
-        
-        $('.something').click(function(){
-          alert('join');
-          // console.log(e);
-          // e.preventDefault();
-          // $('#joingame').modal();
+        $('#gameform').submit(function(e){
+          e.preventDefault();
+          var playername = $('#playername').val();
+          var gameid = $('#gameid').val();
+          window.location = 'game/' + gameid + '/' + playername;
         });
-        // $('#gameform').submit(function(e){
-        //   e.preventDefault();
-        //   var playername = $('#playername').val();
-        //   var gameid = $('#gameid').val();
-        //   window.location = 'game/' + gameid + '/' + playername;
-        // });
       });
     </script>
-
-
   </body>
 </html>

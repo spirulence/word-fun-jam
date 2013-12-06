@@ -6,6 +6,7 @@
 	margin: 0px;
 	padding: 50px;
 	text-align: center;
+	float: left;
 }
 
 .player .name {
@@ -23,9 +24,10 @@
 	width: 0px;
 	top: 0;
 	overflow: visible;
-	position: absolute;
+	position: relative;
 	height: 200px;
 	display: inline-block;
+	float: left;
 }
 
 #alerts {
@@ -81,6 +83,25 @@
 	color: black;
 	font-size: 66px;
 	padding-bottom: 30px;
+	-webkit-transition: 0s;
+	transition: 0s;
+}
+
+.win {
+	animation: win 500ms;
+	-webkit-animation: win 500ms;
+}
+
+@keyframes win
+{
+	0%   { top: 0%;}
+	100% { top: 30%; }
+}
+
+@-webkit-keyframes win 
+{
+	0%   { top: 0%;}
+	100% { top: 30%; }
 }
 
 form {

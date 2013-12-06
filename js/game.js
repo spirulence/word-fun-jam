@@ -4,6 +4,15 @@ function GameCtrl($scope, $location) {
 
     ////////* game functions *////////
 
+    $scope.submitWord = function(){
+        console.log($scope.myText);
+        if($scope.myText==$scope.currentWord){
+            $scope.yayWin();
+        } else {
+            $scope.booLose();
+        }
+    };
+
     $scope.yayWin = function(){
         el = $('<img class="happy anim" src="/img/smiley.svg">');
         $('#alerts').prepend(el);
@@ -23,7 +32,23 @@ function GameCtrl($scope, $location) {
     $scope.clearFields = function(){
         $('input').val('');
         $scope.countDown = '';
-    }
+    };
+
+    $scope.winRound = function(){
+        el = $('#currentWord');
+        el.addClass('win');
+        setTimeout(function(){
+            el.removeClass('win')
+        },500);
+    };
+
+    $scope.loseRound = function() {
+        el = $('#currentWord');
+        el.addClass('lose');
+        setTimeout(function(){
+            el.removeClass('lose')
+        },500);
+    };
 
     ////////* emit functions *////////
 
@@ -134,4 +159,10 @@ function JoinCtrl($scope, $http) {
     error(function(data, status, headers, config) {
         alert('oops couldn\'t get game list');
     });
+
+    $scope.join = function(game){
+        console.log(game);
+        $('#joingame #gameid').val(game.name);
+        $('#joingame').modal();
+    };
 }

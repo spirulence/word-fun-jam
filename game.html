@@ -60,28 +60,25 @@
 <h1 id="currentWord">{{currentWord}}</h1>
 <h1 class="countDown">{{countDown}}</h1>
 
-<form ng-submit="postMessage()">
                 
-  <div id="opponent" class="player">
-    <div class="name">{{opponent}}</div>
-    <input class="typey" type="text" ng-model="opponentText" />
-    <div class="points">{{opponentTime}}</div>ms
-  </div>
+<div id="opponent" class="player">
+  <div class="name">{{opponent}}</div>
+  <input class="typey" type="text" ng-model="opponentText" />
+  <div class="points">{{opponentTime}}</div>ms
+</div>
 
-  <div id="alert-holder">
-    <div id="alerts"></div>
-  </div>
+<div id="alert-holder">
+  <div id="alerts"></div>
+</div>
 
-  <div id="self" class="player">
-    <div class="name">{{nick}}</div>
-    <form ng-submit="submitWord()">
-      <input class="typey" type="text" ng-model="myText" />
-    </form>
-    <div class="points">{{myTime}}</div>ms
-  </div>
-  <input style="display: none;" class="btn-primary" type="submit" value="play">
+<div id="self" class="player">
+  <div class="name">{{nick}}</div>
+  <form style="margin:0px;" ng-submit="submitWord()">
+    <input class="typey" type="text" ng-model="myText" />
+  </form>
+  <div class="points">{{myTime}}</div>ms
+</div>
 
-</form> 
 
 <div id="entergame" class="modal fade">
   <div class="modal-dialog">
@@ -110,6 +107,8 @@
   <a ng-click="yayWin()">win</a>
   <a ng-click="booLose()">lose</a>
   <a ng-click="ask4word()">getWord</a>
+  <a ng-click="loseRound()">loseRound</a>
+  <a ng-click="winRound()">winRound</a>
 </div>
 
 
