@@ -10,6 +10,10 @@ var words = fs.readFileSync("brit-a-z.txt");
 words = words.toString('utf8');
 words = words.replace("'", "").replace("\r", "").split("\n");
 
+var smallwords = fs.readFileSync("smallwords.txt");
+smallwords = smallwords.toString('utf8');
+smallwords = smallwords.replace("'", "").replace("\r", "").split("\n");
+
 var port = process.env.PORT || 8765;
 
 app.listen(port);
@@ -30,13 +34,15 @@ Game.prototype = {
     name: null,
     scores: {},
     rounds: 0,
-    join: function(socket, gameId){
+    difficulty: 'normal',
+    join: function(socket, gameId, difficulty){
         if(this.nicks.indexOf(socket.nick) == -1 && this.nicks.length < 2){
             // this.players.forEach( function(player){
             //     socket.emit('setOpponent', player.nick);
             // });
             
-            this.name = gameId,
+            this.difficulty = (difficulty!=null) ? difficulty : this.difficulty;
+            this.name = gameId;
             socket.game = this;
             this.scores[socket.nick] = {score:0};
             if(this.nicks.length==1){
@@ -92,7 +98,7 @@ Game.prototype = {
             } else {
                 //start game
                 console.log('start game');
-                games[gameId].currentWord = getRandomWord();
+                games[gameId].currentWord = getRandomWord(games[gameId].difficulty);
                 console.log(games[gameId].currentWord);
                 setTimeout(function() { 
                     games[gameId].players.forEach( function(player){
@@ -122,7 +128,7 @@ Game.prototype = {
             }
         });
         //get new word, and send it down
-        games[gameId].currentWord = getRandomWord();
+        games[gameId].currentWord = getRandomWord(games[gameId].difficulty);
         setTimeout(function() { 
             games[gameId].players.forEach( function(player){
                 player.emit('start');
@@ -266,10 +272,17 @@ function handler (req, res) {
     }
 }
 
-function getRandomWord() {
-    var data = fs.readFileSync('brit-a-z.txt', {encoding: 'UTF8'});
-    var lines = data.split('\n');
-    return lines[Math.floor(Math.random()*lines.length)];
+function getRandomWord(gameDifficulty) {
+    console.log(gameDifficulty);
+    if(gameDifficulty=='easy'){
+        var data = fs.readFileSync('smallwords.txt', {encoding: 'UTF8'});
+        var lines = data.split('\n');
+        return lines[Math.floor(Math.random()*lines.length)];
+    } else if(gameDifficulty=='normal'){
+        var data = fs.readFileSync('brit-a-z.txt', {encoding: 'UTF8'});
+        var lines = data.split('\n');
+        return lines[Math.floor(Math.random()*lines.length)];
+    }
 }
 
 io.sockets.on('connection', function (socket) {
@@ -277,13 +290,17 @@ io.sockets.on('connection', function (socket) {
         var gameId = data.gameId;
         var nick = data.nick;
         socket.nick = nick;
+        var difficulty = null;
+        if(data.difficulty!=null){
+            var difficulty = data.difficulty;
+        }
         
         if(!games.hasOwnProperty(gameId)){
             games[gameId] = new Game(gameId);
         }
         var game = games[gameId];
         
-        if (game.join(socket, gameId)){
+        if (game.join(socket, gameId, difficulty)){
             console.log(nick+' joined game '+gameId);
             var opponent;
             if(game.players.length==2) { 

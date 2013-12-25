@@ -76,6 +76,9 @@
           <input type="text" id="playername"></input>
           <p>Enter a new or existing Game ID:</p>
           <input type="text" id="gameid"></input>
+          <p>Difficulty:</p>
+          <input type="radio" name="difficulty" value="normal" checked> normal<br>
+          <input type="radio" name="difficulty" value="easy"> easy<br>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
@@ -123,7 +126,8 @@
           e.preventDefault();
           var playername = $('#playername').val();
           var gameid = $('#gameid').val();
-          window.location = 'game/' + gameid + '/' + playername;
+          var difficulty = $('input:radio[name=difficulty]:checked').val();
+          window.location = 'game/' + gameid + '/' + playername + '?' + difficulty;
         });
       });
     </script>

@@ -82,9 +82,14 @@ function GameCtrl($scope, $location) {
     urlArr = $location.$$absUrl.split('/');
     var nick = urlArr[urlArr.length-1];
     var gameId = urlArr[urlArr.length-2];
-
-    socket.emit('init', { gameId: gameId, nick: nick });
-  
+    var difficulty = null;
+    var splits = nick.split("?");
+    if(splits.length == 2){
+        nick = splits[0];
+        difficulty = splits[1];
+    }
+    console.log('difficulty', difficulty);
+    socket.emit('init', { gameId: gameId, nick: nick, difficulty: difficulty });
 
     ////////* recieve messages *////////
 
