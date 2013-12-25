@@ -1,0 +1,16 @@
+{
+  "name": "wordfunjam",
+  "description": "who types faster?",
+  "version": "0.0.1",
+  "engines": {
+    "node": "0.10.x",
+    "npm": "1.2.x"
+  },
+  "dependencies": {
+    "lodash": "latest",
+    "async": "latest",
+    "q": "~0.9.7",
+    "bcrypt": "~0.7.7",
+    "socket.io": "latest"
+  }
+}
