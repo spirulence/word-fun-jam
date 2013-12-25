@@ -10,7 +10,9 @@ var words = fs.readFileSync("brit-a-z.txt");
 words = words.toString('utf8');
 words = words.replace("'", "").replace("\r", "").split("\n");
 
-app.listen(8765);
+var port = process.env.PORT || 8765;
+
+app.listen(port);
 
 var games = {};
 
