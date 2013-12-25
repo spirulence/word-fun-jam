@@ -316,7 +316,7 @@ io.sockets.on('connection', function (socket) {
             socket.game.scores[socket.nick].score++;
             socket.game.newRound(socket.nick);
         }else{
-            socket.emit(socket, 'wrong');
+            //socket.emit(socket, 'wrong');
         }
     });
 
