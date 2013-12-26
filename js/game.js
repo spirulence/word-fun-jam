@@ -23,12 +23,12 @@ function GameCtrl($scope, $location) {
     };
 
     $scope.playSound = function(filename){   
-        document.getElementById("sound").innerHTML='<audio autoplay="autoplay"><source src="' + filename + '.mp3" type="audio/mpeg" /><source src="' + filename + '.ogg" type="audio/ogg" /><embed hidden="true" autostart="true" loop="false" src="' + filename +'.mp3" /></audio>';
+        document.getElementById("sound").innerHTML='<audio autoplay="autoplay"><source src="' + filename + '" type="audio/mpeg" /><source src="' + filename + '.ogg" type="audio/ogg" /><embed hidden="true" autostart="true" loop="false" src="' + filename +'" /></audio>';
     }
 
     $scope.yayWin = function(){
         el = $('<img class="happy anim" src="/img/smiley.svg">');
-        $scope.playSound('/mp3/ding');
+        $scope.playSound('/mp3/ding.mp3');
         $('#alerts').prepend(el);
         setTimeout(function(){
             el.remove();
@@ -37,7 +37,7 @@ function GameCtrl($scope, $location) {
 
     $scope.booLose = function(){
         el = $('<img class="sad anim" src="/img/angry.svg">');
-        $scope.playSound('/mp3/buzzer');
+        $scope.playSound('/mp3/buzzer.wav');
         $('#alerts').prepend(el);
         setTimeout(function(){
             el.remove();
@@ -88,14 +88,21 @@ function GameCtrl($scope, $location) {
     urlArr = $location.$$absUrl.split('/');
     var nick = urlArr[urlArr.length-1];
     var gameId = urlArr[urlArr.length-2];
+    var params = null;
     var difficulty = null;
+    var ai = false;
+    var speed = null;
     var splits = nick.split("?");
     if(splits.length == 2){
         nick = splits[0];
-        difficulty = splits[1];
+        params = splits[1].split("&");
+        if(params[0] && params[0]!='null') difficulty = params[0];
+        if(params[1] && params[1]!='null') ai = params[1];
+        if(params[2] && params[2]!='null') speed = params[2];
     }
-    console.log('difficulty', difficulty);
-    socket.emit('init', { gameId: gameId, nick: nick, difficulty: difficulty });
+    console.log($location.$$absUrl);
+    console.log(params);
+    socket.emit('init', { gameId: gameId, nick: nick, difficulty: difficulty, ai: ai, speed: speed });
 
     ////////* recieve messages *////////
 
