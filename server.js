@@ -35,7 +35,9 @@ Game.prototype = {
     scores: {},
     rounds: 0,
     difficulty: 'normal',
-    join: function(socket, gameId, difficulty){
+    ai: false,
+    aiSpeed: 2,
+    join: function(socket, gameId, difficulty, ai, speed){
         if(this.nicks.indexOf(socket.nick) == -1 && this.nicks.length < 2){
             // this.players.forEach( function(player){
             //     socket.emit('setOpponent', player.nick);
@@ -53,6 +55,15 @@ Game.prototype = {
                 this.players.push(socket);
             }
             this.nicks.push(socket.nick);
+
+            //create artificial player
+            if(ai) {
+                this.ai = true;
+                this.nicks.push('computer');
+                if(speed) {
+                    this.aiSpeed = speed;
+                }
+            }
             
             if(this.nicks.length == 2){
                 // this.players.forEach( function(player){
@@ -108,6 +119,30 @@ Game.prototype = {
                 }, (5-i)*1000);
             }
         }
+    },
+    aiPlay: function(){
+        var gameId = this.name;
+        var currentWord = games[gameId].currentWord;
+        var letters = currentWord.split('');
+        var word = '';
+        var i;
+        for(i=0; i<=letters.length+1; i++){
+            word = word+letters[i];
+            //play next letter
+            setTimeout(function() { 
+                games[gameId].players.forEach( function(player){
+                    //if we've lost(round is over) cancel
+                    if()
+                    socket.game.emit({id:null}}, 'update', word);
+            
+                });
+            }, (5-i)*1000);
+            
+
+            //if we're done, instead send WIN
+
+
+        });
     },
     newRound: function(winner){
         //send end of round messages, with updated player scores
@@ -287,6 +322,7 @@ function getRandomWord(gameDifficulty) {
 
 io.sockets.on('connection', function (socket) {
     socket.on('init', function (data){
+        console.log('sent init data', data);
         var gameId = data.gameId;
         var nick = data.nick;
         socket.nick = nick;
