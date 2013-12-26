@@ -121,6 +121,10 @@ form {
 	position: relative;
 }
 
+#gameform {
+	margin: 0;
+}
+
 .points {
 	font-size: 22px;
 	margin: 8px;
