@@ -59,6 +59,8 @@ Game.prototype = {
             //create artificial player
             if(ai) {
                 this.ai = true;
+                this.scores['computer'] = {score:0};
+                this.players[0].opponent = 'computer';
                 this.nicks.push('computer');
                 if(speed) {
                     this.aiSpeed = speed;
@@ -116,6 +118,11 @@ Game.prototype = {
                         player.emit('start');
                         player.emit('newWord', games[gameId].currentWord);
                     });
+                    if(games[gameId].ai==true){
+                        setTimeout(function() { 
+                            games[gameId].aiPlay();
+                        }, 1000);
+                    }
                 }, (5-i)*1000);
             }
         }
@@ -126,23 +133,45 @@ Game.prototype = {
         var letters = currentWord.split('');
         var word = '';
         var i;
-        for(i=0; i<=letters.length+1; i++){
-            word = word+letters[i];
-            //play next letter
-            setTimeout(function() { 
-                games[gameId].players.forEach( function(player){
-                    //if we've lost(round is over) cancel
-                    if()
-                    socket.game.emit({id:null}}, 'update', word);
-            
-                });
-            }, (5-i)*1000);
-            
+        for(i=0; i<=letters.length; i++){
 
             //if we're done, instead send WIN
-
-
-        });
+            if(i==letters.length){
+                
+                setTimeout(function(){ 
+                    games[gameId].players.forEach( function(player){
+                        
+                        if(currentWord == games[gameId].currentWord) {
+                            console.log('computer won');
+                            games[gameId].scores['computer'].score++;
+                            games[gameId].newRound(null);
+                        } else {
+                            //if we've lost(round is over) cancel
+                            console.log('ai canceled win');
+                        }
+                
+                    });
+                }, (i*(games[gameId].aiSpeed*1000)));
+            } else {
+                word = word+letters[i];
+                //play next letter
+                (function(index, w){
+                    index++;
+                    setTimeout(function(){ 
+                        games[gameId].players.forEach( function(player){
+                            
+                            if(currentWord == games[gameId].currentWord) {
+                                games[gameId].emit({id:null}, 'update', w);
+                                console.log('ai play', w);
+                            } else {
+                                //if we've lost(round is over) cancel
+                                console.log('ai canceled play', w);
+                            }
+                        });
+                    }, (index*(games[gameId].aiSpeed*1000)));
+                })(i, word);
+            }
+        }
     },
     newRound: function(winner){
         //send end of round messages, with updated player scores
@@ -169,6 +198,9 @@ Game.prototype = {
                 player.emit('start');
                 player.emit('newWord', games[gameId].currentWord);
             });
+            if(games[gameId].ai==true){
+                games[gameId].aiPlay();
+            }
         }, 2000);
     }
 };
@@ -327,6 +359,8 @@ io.sockets.on('connection', function (socket) {
         var nick = data.nick;
         socket.nick = nick;
         var difficulty = null;
+        var ai = data.ai;
+        var speed = data.speed;
         if(data.difficulty!=null){
             var difficulty = data.difficulty;
         }
@@ -336,7 +370,7 @@ io.sockets.on('connection', function (socket) {
         }
         var game = games[gameId];
         
-        if (game.join(socket, gameId, difficulty)){
+        if (game.join(socket, gameId, difficulty, ai, speed)){
             console.log(nick+' joined game '+gameId);
             var opponent;
             if(game.players.length==2) { 
@@ -350,6 +384,11 @@ io.sockets.on('connection', function (socket) {
                         game.start();
                     }
                 });
+            } else if(game.ai == true) { 
+                console.log(game.players);
+                socket.emit('initResponse', nick, 'computer');
+                game.start();
+
             } else {
                 socket.emit('initResponse', nick, opponent);
             }
