@@ -137,21 +137,23 @@ Game.prototype = {
 
             //if we're done, instead send WIN
             if(i==letters.length){
-                
-                setTimeout(function(){ 
-                    games[gameId].players.forEach( function(player){
-                        
-                        if(currentWord == games[gameId].currentWord) {
-                            console.log('computer won');
-                            games[gameId].scores['computer'].score++;
-                            games[gameId].newRound(null);
-                        } else {
-                            //if we've lost(round is over) cancel
-                            console.log('ai canceled win');
-                        }
-                
-                    });
-                }, (i*(games[gameId].aiSpeed*1000)));
+                (function(index){
+                    index++;
+                    setTimeout(function(){ 
+                        games[gameId].players.forEach( function(player){
+                            
+                            if(currentWord == games[gameId].currentWord) {
+                                console.log('computer won');
+                                games[gameId].scores['computer'].score++;
+                                games[gameId].newRound(null);
+                            } else {
+                                //if we've lost(round is over) cancel
+                                console.log('ai canceled win');
+                            }
+                    
+                        });
+                    }, (index*(games[gameId].aiSpeed*1000)));
+                })(i);
             } else {
                 word = word+letters[i];
                 //play next letter
