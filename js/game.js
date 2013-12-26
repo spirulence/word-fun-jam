@@ -22,8 +22,13 @@ function GameCtrl($scope, $location) {
         }
     };
 
+    $scope.playSound = function(filename){   
+        document.getElementById("sound").innerHTML='<audio autoplay="autoplay"><source src="' + filename + '.mp3" type="audio/mpeg" /><source src="' + filename + '.ogg" type="audio/ogg" /><embed hidden="true" autostart="true" loop="false" src="' + filename +'.mp3" /></audio>';
+    }
+
     $scope.yayWin = function(){
         el = $('<img class="happy anim" src="/img/smiley.svg">');
+        $scope.playSound('/mp3/ding');
         $('#alerts').prepend(el);
         setTimeout(function(){
             el.remove();
@@ -32,6 +37,7 @@ function GameCtrl($scope, $location) {
 
     $scope.booLose = function(){
         el = $('<img class="sad anim" src="/img/angry.svg">');
+        $scope.playSound('/mp3/buzzer');
         $('#alerts').prepend(el);
         setTimeout(function(){
             el.remove();
