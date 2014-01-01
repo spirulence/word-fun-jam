@@ -1,3 +1,7 @@
+//
+// Don't give up, Ty!
+//
+
 //set up some server globals
 var liveUsers = {};
 var games = {};
