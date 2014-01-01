@@ -18,6 +18,7 @@ var port = process.env.PORT || 8765;
 
 app.listen(port);
 
+
 var games = {};
 
 function getRandomInt(min, max) {
@@ -75,6 +76,7 @@ Game.prototype = {
             }
 
             console.log('scores!!',this.scores);
+
             
             return true;
         }
@@ -97,6 +99,7 @@ Game.prototype = {
     start: function(){
         var gameId = this.name;
         this.rounds++;
+
         for(var i=5; i>=0; i--) {
             console.log('i', i);
             function timeIt(i) {
@@ -112,6 +115,7 @@ Game.prototype = {
                 //start game
                 console.log('start game');
                 games[gameId].currentWord = getRandomWord(games[gameId].difficulty);
+
                 console.log(games[gameId].currentWord);
                 setTimeout(function() { 
                     games[gameId].players.forEach( function(player){
@@ -373,6 +377,7 @@ io.sockets.on('connection', function (socket) {
         var game = games[gameId];
         
         if (game.join(socket, gameId, difficulty, ai, speed)){
+
             console.log(nick+' joined game '+gameId);
             var opponent;
             if(game.players.length==2) { 
@@ -390,6 +395,7 @@ io.sockets.on('connection', function (socket) {
                 console.log(game.players);
                 socket.emit('initResponse', nick, 'computer');
                 game.start();
+
 
             } else {
                 socket.emit('initResponse', nick, opponent);

@@ -61,6 +61,7 @@
 <h1 class="countDown">{{countDown}}</h1>
 <div class="points">{{opponentScore}} to {{myScore}}</div>
 
+
                 
 <div id="opponent" class="player">
   <div class="name">{{opponent}}</div>
@@ -103,7 +104,6 @@
 </div><!-- /.modal -->
 
 
-
 <!-- Footer
 ================================================== -->
 <hr>
@@ -140,6 +140,7 @@
           var playername = $('#playername').val();
           var gameid = $('#gameid').val();
           window.location = '/game/' + gameid + '/' + playername;
+
         });
       });
     </script>

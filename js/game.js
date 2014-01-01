@@ -4,6 +4,7 @@ function GameCtrl($scope, $location) {
     $scope.myScore = 0;
     $scope.opponentScore = 0;
 
+
     ////////* game functions *////////
 
     $scope.submitWord = function(){
@@ -38,6 +39,7 @@ function GameCtrl($scope, $location) {
     $scope.booLose = function(){
         el = $('<img class="sad anim" src="/img/angry.svg">');
         $scope.playSound('/mp3/buzzer.wav');
+
         $('#alerts').prepend(el);
         setTimeout(function(){
             el.remove();
@@ -165,6 +167,7 @@ function GameCtrl($scope, $location) {
         $scope.myScore = scores.you;
         $scope.booLose();
     });
+
 
     //game over, announce winner
     socket.on('gameResults', function (data) {
