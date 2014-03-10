@@ -6,13 +6,9 @@ var app = require('http').createServer(handler)
   , fs = require('fs')
   , url = require('url');
 
-var words = fs.readFileSync("brit-a-z.txt");
-words = words.toString('utf8');
-words = words.replace("'", "").replace("\r", "").split("\n");
+var words = JSON.parse(fs.readFileSync("brit-a-z.txt.json"));
 
-var smallwords = fs.readFileSync("smallwords.txt");
-smallwords = smallwords.toString('utf8');
-smallwords = smallwords.replace("'", "").replace("\r", "").split("\n");
+var smallwords = JSON.parse(fs.readFileSync("smallwords.txt.json"));
 
 var port = process.env.PORT || 8765;
 
@@ -348,13 +344,13 @@ function handler (req, res) {
 function getRandomWord(gameDifficulty) {
     console.log(gameDifficulty);
     if(gameDifficulty=='easy'){
-        var data = fs.readFileSync('smallwords.txt', {encoding: 'UTF8'});
-        var lines = data.split('\n');
-        return lines[Math.floor(Math.random()*lines.length)];
+        //var data = fs.readFileSync('smallwords.txt', {encoding: 'UTF8'});
+        //var lines = data.split('\n');
+        return smallwords[Math.floor(Math.random()*smallwords.length)];
     } else if(gameDifficulty=='normal'){
-        var data = fs.readFileSync('brit-a-z.txt', {encoding: 'UTF8'});
-        var lines = data.split('\n');
-        return lines[Math.floor(Math.random()*lines.length)];
+        //var data = fs.readFileSync('brit-a-z.txt', {encoding: 'UTF8'});
+        //var lines = data.split('\n');
+        return words[Math.floor(Math.random()*words.length)];
     }
 }
 
